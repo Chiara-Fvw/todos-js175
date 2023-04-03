@@ -27,6 +27,7 @@ const compareByTitle = (todoListA, todoListB) => {
     return 0;
   }
 };
+
 //return the list of todo lists sorted by completion status and title
 const sortTodoLists = lists => {
   let undone = lists.filter(todoList => !todoList.isDone());
