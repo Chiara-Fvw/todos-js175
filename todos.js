@@ -17,16 +17,26 @@ app.use(express.static("public"));
 //return the list of todo lists sorted by completion status and title
 const sortTodoLists = lists => {
   return lists.slice().sort((todoListA, todoListB) => {
-    let titleA = todoListA.title;
-    let titleB = todoListB.title;
+    let isDoneA = todoListA.isDone();
+    let isDoneB = todoListB.isDone();
 
-    if (titleA < titleB) {
+    if (!isDoneA && isDoneB) {
       return -1;
-    } else if (titleA > titleB) {
+    } else if (isDoneA && !isDoneB) {
       return 1;
     } else {
-      return 0;
-    }
+      let titleA = todoListA.title;
+      let titleB = todoListB.title;
+
+      if (titleA < titleB) {
+        return -1;
+      } else if (titleA > titleB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    };
+    
   });
 };
 
