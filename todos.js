@@ -16,8 +16,8 @@ app.use(express.static("public"));
 
 //compare the lists alphabetically
 const compareByTitle = (todoListA, todoListB) => {
-  let titleA = todoListA.title;
-  let titleB = todoListB.title;
+  let titleA = todoListA.title.toLowerCase();
+  let titleB = todoListB.title.toLowerCase();
 
   if (titleA < titleB) {
     return -1;
