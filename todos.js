@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const TodoList = require("./lib/todolist");
 
 const app = express();
 const host = "localhost";
@@ -13,6 +14,7 @@ app.set("view engine", "pug");
 
 app.use(morgan("common"));
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: false }));
 
 //compare the lists alphabetically
 const compareByTitle = (todoListA, todoListB) => {
@@ -52,6 +54,13 @@ app.get("/lists", (req, res) => {
 //render new todo list page
 app.get("/lists/new", (req, res) => {
   res.render("new-list");
+});
+
+//Create a new todo list
+app.post("/lists", (req, res) => {
+  let title = req.body.todoListTitle.trim();
+  todoLists.push(new TodoList(title));
+  res.redirect("/lists");
 });
 
 //listener
