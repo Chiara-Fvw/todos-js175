@@ -39,13 +39,23 @@ const sortTodoLists = lists => {
 };
 
 app.get("/", (req, res) => {
-  res.render("lists", { 
-    todoLists: sortTodoLists(todoLists),
-  });
+  res.redirect("/lists");
 });
 
+//Render the list of todo lists
+app.get("/lists", (req, res) => {
+  res.render("lists", {
+    todoLists: sortTodoLists(todoLists),
+  })
+});
+
+//render new todo list page
+app.get("/lists/new", (req, res) => {
+  res.render("new-list");
+});
 
 //listener
 app.listen(port, host, () => {
   console.log(`Listening on port ${port} of ${host}!`);
 });
+
