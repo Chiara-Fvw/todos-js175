@@ -25,6 +25,12 @@ app.use(session({
 }));
 
 app.use(flash());
+//extracts session info
+app.use((req, res, next) => {
+  res.locals.flash = req.session.flash;
+  delete req.session.flash;
+  next();
+})
 
 //compare the lists alphabetically
 const compareByTitle = (todoListA, todoListB) => {
