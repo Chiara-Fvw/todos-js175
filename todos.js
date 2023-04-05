@@ -66,10 +66,12 @@ app.post("/lists", (req, res) => {
   } else if (title.length > 100) {
     res.render("new-list", {
       errorMessage: "List title must be between 1 and 100 characters.",
+      todoListTitle: title,
     });
   } else if (todoLists.some(list => list.title === title)) {
     res.render("new-list", {
       errorMessage: "List title must be unique.",
+      todoListTitle: title,
     });
   } else {
     todoLists.push(new TodoList(title));
