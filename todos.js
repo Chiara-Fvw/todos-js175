@@ -63,6 +63,10 @@ app.post("/lists", (req, res) => {
     res.render("new-list", {
       errorMessage: "A title was not provided.",
     });
+  } else if (title.length > 100) {
+    res.render("new-list", {
+      errorMessage: "List title must be between 1 and 100 characters.",
+    });
   } else {
     todoLists.push(new TodoList(title));
     res.redirect("/lists");
