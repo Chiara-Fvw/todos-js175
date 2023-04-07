@@ -110,9 +110,6 @@ app.get("/lists/:todoListId", (req, res, next) => {
 
 //toggle completion status of a todo
 app.post("/lists/:todoListId/todos/:todoId/toggle", (req, res, next) => {
-  //check the status of the todo
-  //change the status of the todo
-  //render the list/todolistid view
   let { todoListId, todoId } = { ...req.params };
   let todo = loadTodo(+todoListId, +todoId);
   if (!todo) {
@@ -128,6 +125,24 @@ app.post("/lists/:todoListId/todos/:todoId/toggle", (req, res, next) => {
     }
 
     res.redirect(`/lists/${todoListId}`);
+  }
+});
+
+//delete todo
+app.post("/lists/:todoListId/todos/:todoId/destroy", (req, res, next) => {
+  let { todoListId, todoId } = { ...req.params };
+  let todoList = loadTodoList(+todoListId);
+  if (!todoList) {
+    next(new Error("Not found."));
+  } else {
+    let todo = loadTodo(+todoListId, +todoId);
+    if(!todo) {
+      next(new Error("Not found."));
+    } else {
+      todoList.removeAt(todoList.findIndexOf(todo));
+      req.flash("success", "The todo has been deleted.");
+      res.redirect(`/lists/${todoListId}`);
+    }
   }
 });
 
