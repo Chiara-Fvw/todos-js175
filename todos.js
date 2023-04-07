@@ -194,6 +194,17 @@ app.post("/lists/:todoListId/todos", [
   }
 );
 
+//edit list
+app.get("/lists/:todoListId/edit", (req, res, next) => {
+  let todoListId = req.params.todoListId;
+  let todoList = loadTodoList(+todoListId);
+  if (!todoList) {
+    next(new Error("Not found."));
+  } else {
+    res.render("edit-list", { todoList });
+  }
+})
+
 //error handler
 app.use((err, req, res, _next) => {
   console.log(err); //writes more extensive information to the console log

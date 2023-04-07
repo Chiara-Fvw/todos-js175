@@ -1,7 +1,7 @@
 extends layout 
 
 block main 
-  section#todos(class=todoList.isDone() ? "done" : " ") 
+  section#todos(class=todoList.isDone() ? "done" : "") 
     header 
       h2= todoList.title 
       ul 
