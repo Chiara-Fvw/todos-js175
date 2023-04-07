@@ -38,7 +38,15 @@ app.use((req, res, next) => {
 //Find a todo list with the indicated ID. Returns 'undefined' if not found. NOte that 'todoListId' must be numeric.
 const loadTodoList = todoListId => {
   return todoLists.find(todoList => todoList.id === todoListId); 
-}
+};
+
+//Find a todo with the indicated ID in the indicated todo list. Returns `undefined`if not found. Note that both `todolistId` and `todoId`must be numeric.
+const loadTodo = (todoListId, todoId) => {
+  let todoList = loadTodoList(todoListId);
+  if (!todoList) return undefined;
+
+  return todoList.todos.find(todo => todo.id === todoId);
+};
 
 app.get("/", (req, res) => {
   res.redirect("/lists");
@@ -97,6 +105,29 @@ app.get("/lists/:todoListId", (req, res, next) => {
       todoList: todoList,
       todos: sortTodos(todoList),
     });
+  }
+});
+
+//toggle completion status of a todo
+app.post("/lists/:todoListId/todos/:todoId/toggle", (req, res, next) => {
+  //check the status of the todo
+  //change the status of the todo
+  //render the list/todolistid view
+  let { todoListId, todoId } = { ...req.params };
+  let todo = loadTodo(+todoListId, +todoId);
+  if (!todo) {
+    next(new Error("Not found."));
+  } else {
+    let title = todo.title;
+    if (todo.isDone()) {
+      todo.markUndone();
+      req.flash("success", `"${title}" marked as NOT done!`);
+    } else {
+      todo.markDone();
+      req.flash("success", `"${title}" marked as done.`);
+    }
+
+    res.redirect(`/lists/${todoListId}`);
   }
 });
 
