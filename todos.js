@@ -203,7 +203,59 @@ app.get("/lists/:todoListId/edit", (req, res, next) => {
   } else {
     res.render("edit-list", { todoList });
   }
-})
+});
+
+//delete list
+app.post("/lists/:todoListId/destroy", (req, res, next) => {
+  let todoListId = +req.params.todoListId;
+  let index = todoLists.findIndex(todoList => todoList.id === todoListId);
+  if (index === -1) {
+    next(new Error("Not found."));
+  } else {
+    todoLists.splice(index, 1);
+
+    req.flash("success", "Todo list deleted.");
+    res.redirect("/lists");
+  }
+});
+
+//edit the list title
+app.post("/lists/:todoListId/edit", 
+  [
+    body("todoListTitle")
+      .trim()
+      .isLength({min: 1})
+      .withMessage("The list title is required.")
+      .isLength({max: 100})
+      .withMessage("List title must be between 1 and 100 characters.")
+      .custom(title => {
+        let duplicate = todoLists.find(list => list.title === title);
+        return duplicate === undefined;
+      })
+      .withMessage("List title must be unique."),
+  ], 
+  (req, res, next) => {
+    let todoListId = req.params.todoListId;
+    let todoList = loadTodoList(+todoListId);
+    if (!todoList) {
+      next(new Error("Not found."));
+    } else {
+      let errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        errors.array().forEach(message => req.flash("error", message.msg));
+
+        res.render("edit-list", {
+          flash:req.flash(),
+          todoList: todoList,
+        });
+      } else {
+        todoList.setTitle(req.body.todoListTitle);
+        req.flash("success", "The list updated.");
+        res.redirect(`/lists/${todoListId}`);
+      }
+    };
+  }
+);
 
 //error handler
 app.use((err, req, res, _next) => {
