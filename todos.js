@@ -37,10 +37,14 @@ app.use(flash());
 
 //Set up persistent session data
 app.use((req, res, next) => {
-  if (!("todoLists" in req.session)) {
-    req.session.todoLists = [];
+  let todoLists = [];
+  if ("todoLists" in req.session) {
+    req.session.todoLists.forEach(todoList => {
+      todoLists.push(TodoList.makeTodoList(todoList));
+    });
   }
 
+  req.session.todoLists = todoLists;
   next();
 });
 
