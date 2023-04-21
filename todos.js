@@ -10,7 +10,7 @@ const store = require("connect-loki");
 
 const app = express();
 const host = "localhost";
-const port = 3000;
+const port = 3009;
 const LokiStore = store(session);
 
 app.set("views", "./views");
@@ -55,7 +55,7 @@ app.use((req, res, next) => {
   next();
 });
 
-//Find a todo list with the indicated ID. Returns 'undefined' if not found. NOte that 'todoListId' must be numeric.
+//Find a todo list with the indicated ID. Returns 'undefined' if not found. Note that 'todoListId' must be numeric.
 const loadTodoList = (todoListId, todoLists) => {
   return todoLists.find(todoList => todoList.id === todoListId); 
 };
